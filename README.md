@@ -1,5 +1,5 @@
 # GitOps for ArgoCD 
-- ArgoCD의 Multi Cluster 환경 App of Apps 프로젝트
+- Multi Cluster 환경 ArgoCD App of Apps 구조 프로젝트
 
 ## 아키텍처
 
