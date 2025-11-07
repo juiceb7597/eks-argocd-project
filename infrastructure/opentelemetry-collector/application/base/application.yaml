@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: opentelemetry-custom
+  namespace: argocd
+spec:
+  project: infrastructure
+  source:
+    repoURL: 'https://example.com/test-repo/test.git'
+    targetRevision: master
+    path: changeme
+  destination:
+    server: changeme
+    namespace: changeme

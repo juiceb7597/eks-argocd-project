@@ -1,0 +1,7 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ec2nodeclass-workload.yaml
+  - ec2nodeclass-system.yaml
+  - nodepool-system.yaml
+  - nodepool-workload.yaml

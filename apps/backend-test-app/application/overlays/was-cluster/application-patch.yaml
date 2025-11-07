@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: backend-test-app
+  namespace: argocd
+  annotations:
+    argocd-image-updater.argoproj.io/write-back-method: git:repocreds #git:secret:argocd/gitea-creds
+    argocd-image-updater.argoproj.io/image-list: backend-test-app=ACCOUNT_NUMBER.dkr.ecr.ap-northeast-1.amazonaws.com/test-app/backend-test-app
+    argocd-image-updater.argoproj.io/backend-test-app.update-strategy: newest-build
+    argocd-image-updater.argoproj.io/backend-test-app.allow-tags: regexp:^backend-test-app-[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$
+spec:
+  source:
+    repoURL: 'https://example.com/test-repo/test.git'
+    targetRevision: master
+    path: apps/backend-test-app/resources/overlays/was-cluster
+  destination:
+    server: 'https://1234ABCD.gr7.ap-northeast-1.eks.amazonaws.com'
+    namespace: back-end
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+  ignoreDifferences:
+    - group: autoscaling
+      kind: HorizontalPodAutoscaler
+      jqPathExpressions:
+        - '.spec.replicas'
+        - '.status'

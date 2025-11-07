@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root-infra-web
+  namespace: argocd
+spec:
+  project: infrastructure
+  sources: 
+    - repoURL: 'https://example.com/test-repo/test.git'
+      path: argocd/infrastructure/karpenter/web-cluster
+      targetRevision: master
+    - repoURL: 'https://example.com/test-repo/test.git'
+      path: argocd/infrastructure/argocd/web-cluster
+      targetRevision: master
+    - repoURL: 'https://example.com/test-repo/test.git'
+      path: argocd/infrastructure/albc/web-cluster
+      targetRevision: master
+    - repoURL: 'https://example.com/test-repo/test.git'
+      path: argocd/infrastructure/argocd-image-updater/web-cluster
+      targetRevision: master
+    - repoURL: 'https://example.com/test-repo/test.git'
+      path: argocd/infrastructure/gitea/web-cluster
+      targetRevision: master
+    - repoURL: 'https://example.com/test-repo/test.git'
+      path: argocd/infrastructure/opentelemetry-collector/web-cluster
+      targetRevision: master
+    - repoURL: 'https://example.com/test-repo/test.git'
+      path: argocd/infrastructure/sealed-secret/web-cluster
+      targetRevision: master
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

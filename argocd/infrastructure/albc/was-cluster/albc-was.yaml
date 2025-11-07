@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: albc-app-was
+spec:
+  project: infrastructure
+  sources: 
+    - repoURL: 'https://example.com/test-repo/test.git'
+      path: infrastructure/albc/helm/overlays/was-cluster
+      targetRevision: master
+    - repoURL: 'https://example.com/test-repo/test.git'
+      path: infrastructure/albc/application/overlays/was-cluster
+      targetRevision: master
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

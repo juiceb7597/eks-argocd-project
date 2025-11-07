@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: karpenter
+  namespace: argocd
+spec:
+  project: infrastructure
+  source:
+    repoURL: 'oci://public.ecr.aws/karpenter/karpenter'
+    chart: karpenter
+    targetRevision: changeme
+    helm:
+      valuesObject:
+        fullnameOverride: "karpenter"
+        settings:
+          clusterName: changeme
+          isolatedVPC: true
+        controller:
+          image:
+            repository: changeme
+            tag: changeme
+            digest: changeme
+          resources:
+            requests:
+              cpu: 1
+              memory: 1Gi
+            limits:
+              cpu: 1
+              memory: 1Gi
+        dnsPolicy: Default
+        serviceAccount:
+          annotations:
+            eks.amazonaws.com/role-arn: changeme
+  destination:
+    namespace: karpenter
+    server: changeme

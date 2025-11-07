@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+patches:
+  - path: project-infrastructure.yaml
+  - path: project-app.yaml
+  # - path: gitea-secret-patch.yaml
+  - path: gitlab-secret-patch.yaml
+  - path: image-updater-token-secret-patch.yaml
+  - path: was-cluster-secret-patch.yaml

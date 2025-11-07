@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root-apps-was
+  namespace: argocd
+spec:
+  project: app
+  sources: 
+    - repoURL: 'https://example.com/test-repo/test.git'
+      path: apps/backend-test-app/application/overlays/was-cluster
+      targetRevision: master
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

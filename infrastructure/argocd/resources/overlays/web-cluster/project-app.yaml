@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: app
+spec:
+  description: App Project
+  sourceRepos:
+    - 'https://example.com/test-repo/test.git'
+  destinations:
+    - namespace: 'argocd'
+      server: 'https://kubernetes.default.svc'
+    - namespace: 'front-end'
+      server: 'https://kubernetes.default.svc'
+    - namespace: 'back-end'
+      server: '*'
+  roles:
+  - name: image-updater
+    description: Role for ArgoCD Image Updater
+    policies:
+    # p, proj:<project>:<role>, <resource>, <action>, <object>, <effect>
+    # action: <action>/<group>/<kind>/<ns>/<name>
+    # object: <project>/<ns>/<app-name>
+    - p, proj:app:image-updater, applications, get, app/*, allow
+    - p, proj:app:image-updater, applications, update, app/*, allow
+    # TOKEN=$(argocd proj role create-token app image-updater --id image-updater)

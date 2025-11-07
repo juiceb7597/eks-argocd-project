@@ -1,0 +1,13 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: albc-custom
+  namespace: argocd
+spec:
+  source:
+    repoURL: 'https://example.com/test-repo/test.git'
+    targetRevision: master
+    path: infrastructure/albc/resources
+  destination:
+    namespace: kube-system
+    server: 'https://1234ABCD.gr7.ap-northeast-1.eks.amazonaws.com'

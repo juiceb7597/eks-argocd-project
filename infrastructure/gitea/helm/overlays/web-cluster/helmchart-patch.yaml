@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitea
+spec:
+  source:
+    repoURL: 'https://dl.gitea.com/charts'
+    targetRevision: 12.4.0
+    helm:
+      valuesObject:
+        image:
+          registry: ACCOUNT_NUMBER.dkr.ecr.ap-northeast-1.amazonaws.com
+          repository: gitea/gitea
+          tag: 1.24.6
+          digest: ""
+        ingress:
+          annotations:
+            alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-1:ACCOUNT_NUMBER:certificate/111111-2222-3333-4444
+            alb.ingress.kubernetes.io/group.name: test-stg-web
+          hosts:
+            - host: test-gitea-stg.example.com
+        gitea:
+          config:
+            server:
+              ROOT_URL: https://test-gitea-stg.example.com
+              DOMAIN: test-gitea-stg.example.com
+              SSH_DOMAIN: test-gitea-stg.example.com
+            webhook:
+              ALLOWED_HOST_LIST: "argocd-server.argocd.svc.cluster.local"
+              SKIP_TLS_VERIFY: "true"
+          admin:
+            username: "testusername"
+            password: "testpassword"
+            email: "admin@example.com"
+  destination:
+    namespace: gitea
+    server: 'https://kubernetes.default.svc'

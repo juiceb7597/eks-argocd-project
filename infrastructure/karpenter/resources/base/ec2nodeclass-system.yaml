@@ -1,0 +1,21 @@
+apiVersion: karpenter.k8s.aws/v1
+kind: EC2NodeClass
+metadata:
+  name: system
+spec:
+  amiSelectorTerms:
+    - alias: changeme
+  instanceProfile: "EKSNodeRoleProfile"
+  subnetSelectorTerms:
+    - tags:
+        karpenter.sh/discovery: "changeme"
+  securityGroupSelectorTerms:
+    - tags:
+        aws:eks:cluster-name: "changeme"
+  blockDeviceMappings:
+    - deviceName: changeme
+      ebs:
+        volumeSize: changeme
+        volumeType: changeme
+        encrypted: changeme
+        deleteOnTermination: changeme

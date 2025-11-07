@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: argocd
+resources:
+  - gitlab-secret.yaml
+  # - gitea-secret.yaml
+  - image-updater-token-secret.yaml
+  - appproject-app.yaml
+  - appproject-infrastructure.yaml
+  - was-cluster-secret.yaml

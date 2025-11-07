@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-test-app
+spec:
+  replicas: changeme
+  minReadySeconds: 10
+  revisionHistoryLimit: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:                 
+      maxUnavailable: 25%    
+  selector:
+    matchLabels:
+      app: backend-test-app
+  template:
+    metadata:
+      labels:
+        app: backend-test-app
+      annotations:
+        instrumentation.opentelemetry.io/inject-java: "opentelemetry-operator-system/java-instrumentation"
+    spec:
+      nodeSelector:
+        node-type: workload
+      containers:
+      - name: backend-test-app
+        image: changeme
+        imagePullPolicy: Always
+        env:
+        - name: OTEL_SERVICE_NAME
+          value: changeme
+        ports:
+        - name: http
+          containerPort: 8080
+        resources:
+          requests:
+            memory: changeme                                               
+            cpu: changeme
+          limits:
+            memory: changeme                                              
+            cpu: changeme
+        livenessProbe:
+          httpGet:
+            path: /service/healthy
+            port: 8080
+          initialDelaySeconds: 60
+          failureThreshold: 10
+          periodSeconds: 30        
+        readinessProbe:
+          httpGet:
+            path: /service/healthy
+            port: 8080
+          initialDelaySeconds: 60
+          failureThreshold: 5
+          periodSeconds: 15
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sh", "-c", "sleep 20"]

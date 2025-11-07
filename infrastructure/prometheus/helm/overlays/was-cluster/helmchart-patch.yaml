@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus
+  namespace: argocd
+spec:
+  project: infrastructure
+  source:
+    chart: prometheus
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: 27.28.2
+    helm:
+      valuesObject:
+        server:
+          persistentVolume:
+            storageClass: "ebs-sc-gp3"
+            size: 30Gi
+          retention: 15d
+          retentionSize: "40GB"
+          ingress:
+            annotations:
+              alb.ingress.kubernetes.io/group.name: test-stg-was
+              alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-1:ACCOUNT_NUMBER:certificate/111111-2222-3333-4444
+            hosts:
+              - "test-prometheus-stg.example.com"
+            path: /
+  destination:
+    server: 'https://1234ABCD.gr7.ap-northeast-1.eks.amazonaws.com'
+    namespace: monitoring
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

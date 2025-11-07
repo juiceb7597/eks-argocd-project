@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: opentelemetry-operator
+  namespace: argocd
+spec:
+  project: infrastructure
+  source:
+    chart: opentelemetry-operator
+    repoURL: https://open-telemetry.github.io/opentelemetry-helm-charts
+    targetRevision: 0.91.1
+    helm:
+      releaseName: opentelemetry-operator
+      valuesObject:
+        manager:
+          collectorImage:
+            repository: amazon/aws-otel-collector
+            tag: changeme
+  destination:
+    server: changeme
+    namespace: changeme

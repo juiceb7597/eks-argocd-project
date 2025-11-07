@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+spec:
+  project: infrastructure
+  source:
+    repoURL: 'https://argoproj.github.io/argo-helm'
+    chart: argo-cd
+    targetRevision: 9.0.5
+    helm:
+      valuesObject:
+        fullnameOverride: argocd
+        global:
+          domain: changeme
+        configs:
+          params:
+            server.insecure: true
+          secret:
+            argocdServerAdminPassword: changeme
+        server:
+          ingress:
+            enabled: true
+            controller: aws
+            ingressClassName: alb
+            annotations:
+              alb.ingress.kubernetes.io/target-type: ip
+              alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
+              alb.ingress.kubernetes.io/backend-protocol: HTTP
+              alb.ingress.kubernetes.io/certificate-arn: changeme
+              alb.ingress.kubernetes.io/group.name: changeme
+            aws:
+              serviceType: ClusterIP
+              backendProtocolVersion: GRPC
+  destination:
+    namespace: argocd
+    server: changeme

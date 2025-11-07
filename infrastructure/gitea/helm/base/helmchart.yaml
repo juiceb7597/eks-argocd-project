@@ -1,0 +1,66 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitea
+spec:
+  project: infrastructure
+  source:
+    repoURL: 'https://dl.gitea.com/charts'
+    chart: gitea
+    targetRevision: changeme
+    helm:
+      valuesObject:
+        valkey-cluster:
+          enabled: false
+        valkey:
+          enabled: true
+        postgresql:
+          enabled: true
+        postgresql-ha:
+          enabled: false
+        persistence:
+          enabled: true
+          storageClass: ebs-sc-gp3
+        image:
+          registry: changeme
+          repository: changeme
+          tag: changeme
+          digest: changeme
+        ingress:
+          enabled: true
+          className: alb
+          annotations:
+            alb.ingress.kubernetes.io/target-type: ip
+            alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
+            alb.ingress.kubernetes.io/backend-protocol: HTTP
+            alb.ingress.kubernetes.io/certificate-arn: changeme
+            alb.ingress.kubernetes.io/group.name: changeme
+          hosts:
+            - host: changeme
+        gitea:
+          config:
+            database:
+              DB_TYPE: postgres
+            indexer:
+              ISSUE_INDEXER_TYPE: bleve
+              REPO_INDEXER_ENABLED: true
+            server:
+              ROOT_URL: changeme
+              DOMAIN: changeme
+              PROTOCOL: http
+              SSH_DOMAIN: changeme
+            webhook:
+              ALLOWED_HOST_LIST: changeme
+              SKIP_TLS_VERIFY: changeme
+          admin:
+            username: changeme
+            password: changeme
+            email: changeme
+  ignoreDifferences:
+    - group: ""
+      kind: PersistentVolumeClaim
+      jsonPointers:
+        - /metadata/labels
+  destination:
+    namespace: gitea
+    server: changeme

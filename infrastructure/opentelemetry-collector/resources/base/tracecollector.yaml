@@ -1,0 +1,44 @@
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: otel-trace
+  namespace: opentelemetry-operator-system
+spec:
+  mode: daemonset
+  serviceAccount: adot-collector
+  config:
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+    processors:
+      batch/traces:
+        timeout: 5s
+        send_batch_size: 50
+      filter/healthcheck:
+        error_mode: ignore
+        traces:
+          span:
+            - 'attributes["http.route"] == "/"'
+            - 'attributes["http.route"] == "/service/healthy"'
+            - 'attributes["http.route"] == "/health"'
+            - 'attributes["http.route"] == "/*"'
+    exporters:
+      # debug:
+      #   verbosity: detailed
+      awsxray:
+        region: "ap-northeast-1"
+    service:
+      telemetry:
+        logs:
+          level: debug
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [filter/healthcheck, batch/traces]
+          # exporters: [debug]
+          exporters: [awsxray]
+

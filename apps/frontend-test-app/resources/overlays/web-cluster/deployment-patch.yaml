@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-test-app
+spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+      - name: frontend-test-app
+        image: ACCOUNT_NUMBER.dkr.ecr.ap-northeast-1.amazonaws.com/test-app/frontend-test-app:frontend-test-app-1.0.0.13
+        resources:
+          requests:
+            memory: 256Mi                                                
+            cpu: 100m
+          limits:
+            memory: 512Mi                                                
+            cpu: 200m

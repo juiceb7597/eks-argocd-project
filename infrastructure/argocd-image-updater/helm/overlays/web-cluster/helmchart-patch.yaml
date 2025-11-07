@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-image-updater
+  namespace: argocd
+spec:
+  source:
+    targetRevision: "0.14.0"
+    helm:
+      valuesObject:
+        extraEnv:
+          - name: AWS_REGION
+            value: "ap-northeast-1"
+          # https://argocd-image-updater.readthedocs.io/en/stable/install/installation/#configure-api-access-token-secret
+          - name: ARGOCD_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: argocd-image-updater-secret
+                key: argocd.token
+        extraArgs:
+          - --interval
+          - 10s
+        config:
+          logLevel: "debug"
+          argocd:
+            grpcWeb: false
+            serverAddress: "argocd-server.argocd.svc.cluster.local"
+          registries:
+            - name: ECR
+              api_url: https://ACCOUNT_NUMBER.dkr.ecr.ap-northeast-1.amazonaws.com
+              prefix: ACCOUNT_NUMBER.dkr.ecr.ap-northeast-1.amazonaws.com
+              ping: true
+              credentials: ext:/scripts/ecr-login.sh
+              credsexpire: 6h
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd

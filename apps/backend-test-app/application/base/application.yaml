@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: backend-test-app
+  namespace: argocd
+spec:
+  project: app
+  source:
+    repoURL: changeme
+    targetRevision: master
+    path: changeme
+  destination:
+    server: changeme
+    namespace: changeme

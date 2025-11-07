@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-image-updater-app
+spec:
+  project: infrastructure
+  source:
+    repoURL: 'https://example.com/test-repo/test.git'
+    targetRevision: master
+    path: infrastructure/argocd-image-updater/helm/overlays/web-cluster
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

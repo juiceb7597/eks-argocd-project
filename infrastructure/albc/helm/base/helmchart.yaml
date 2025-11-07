@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: albc
+  namespace: argocd
+spec:
+  project: infrastructure
+  source:
+    repoURL: 'https://aws.github.io/eks-charts'
+    chart: aws-load-balancer-controller
+    targetRevision: changeme
+    helm:
+      valuesObject:
+        fullnameOverride: "aws-load-balancer-controller"
+        enableCertManager: true
+        serviceAccount:
+          create: false
+          name: aws-load-balancer-controller
+        clusterName: changeme
+        vpcId: changeme
+  destination:
+    namespace: kube-system
+    server: changeme

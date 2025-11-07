@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+patches:
+  - path: helmchart-patch.yaml
+  - target:
+      group: argoproj.io
+      version: v1alpha1
+      kind: Application
+      name: opentelemetry-operator
+      namespace: argocd
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: opentelemetry-operator-was

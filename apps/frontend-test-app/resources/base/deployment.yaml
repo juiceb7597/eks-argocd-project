@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-test-app
+spec:
+  replicas: changeme
+  minReadySeconds: 10
+  revisionHistoryLimit: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:                 
+      maxUnavailable: 25%    
+  selector:
+    matchLabels:
+      app: frontend-test-app
+  template:
+    metadata:
+      labels:
+        app: frontend-test-app
+        tier: frontend
+    spec:
+      nodeSelector:
+        node-type: workload
+      containers:
+      - name: frontend-test-app
+        image: changeme
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 10000
+        resources:
+          requests:
+            memory: changeme                                               
+            cpu: changeme
+          limits:
+            memory: changeme                                              
+            cpu: changeme
+        livenessProbe:              
+          exec:
+            command: ["sh", "-c", "cd /etc/nginx"]              
+          initialDelaySeconds: 30
+          periodSeconds: 30             
+        readinessProbe:
+          exec:
+            command: ["sh", "-c", "cd /etc/nginx"]  
+          initialDelaySeconds: 60
+          periodSeconds: 15
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sh", "-c", "sleep 20"]

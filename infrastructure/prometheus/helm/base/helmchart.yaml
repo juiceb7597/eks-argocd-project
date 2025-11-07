@@ -1,0 +1,72 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus
+  namespace: argocd
+spec:
+  project: infrastructure
+  source:
+    chart: prometheus
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: 27.28.2
+    helm:
+      releaseName: prometheus
+      valuesObject:
+        prometheus-node-exporter:
+          enabled: false
+        prometheus-pushgateway:
+          enabled: false
+        alertmanager:
+          enabled: false
+        serverFiles:
+          prometheus.yml:
+            scrape_configs: []
+            rule_files: []
+        server:
+          tsdb:
+            out_of_order_time_window: "5m"
+          image:
+            repository: quay.io/prometheus/prometheus
+            tag: ""
+          extraArgs:
+            web.enable-remote-write-receiver: ""
+          statefulSet:
+            enabled: true
+          persistentVolume:
+            enabled: true
+            storageClass: changeme
+            accessModes:
+              - ReadWriteOnce
+            size: changeme
+            mountPath: /data
+          resources:
+            requests:
+              memory: 500Mi
+              cpu: 250m
+            limits:
+              memory: 1Gi
+              cpu: 500m
+          retention: changeme
+          retentionSize: changeme
+          ingress:
+            enabled: true
+            ingressClassName: "alb"
+            annotations:
+              alb.ingress.kubernetes.io/group.name: changeme
+              alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
+              alb.ingress.kubernetes.io/target-type: ip
+              alb.ingress.kubernetes.io/healthcheck-interval-seconds: "15"
+              alb.ingress.kubernetes.io/healthcheck-path: /healthz
+              alb.ingress.kubernetes.io/healthcheck-port: "8080"
+              alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+              alb.ingress.kubernetes.io/healthcheck-timeout-seconds: "5"
+              alb.ingress.kubernetes.io/healthy-threshold-count: "2"
+              alb.ingress.kubernetes.io/success-codes: "200"
+              alb.ingress.kubernetes.io/unhealthy-threshold-count: "2"
+              alb.ingress.kubernetes.io/certificate-arn: changeme
+            hosts:
+              - changeme
+            path: /
+  destination:
+    server: changeme
+    namespace: changeme

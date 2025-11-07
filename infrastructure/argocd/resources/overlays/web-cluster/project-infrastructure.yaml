@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: infrastructure
+spec:
+  description: Infrastructure Project
+  sourceRepos:
+    - '*'
+  destinations:
+    - namespace: 'argocd'
+      server: '*'
+    - namespace: 'gitea'
+      server: '*'
+    - namespace: 'karpenter'
+      server: '*'
+    - namespace: 'kube-system'
+      server: '*'
+    - namespace: 'cert-manager'
+      server: '*'
+    - namespace: 'monitoring'
+      server: '*'
+    - namespace: 'opentelemetry-operator-system'
+      server: '*'
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'

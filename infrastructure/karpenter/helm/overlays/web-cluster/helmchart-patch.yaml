@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: karpenter
+  namespace: argocd
+spec:
+  source:
+    targetRevision: 1.8.2
+    helm:
+      valuesObject:
+        settings:
+          clusterName: eks-web-test-stg-an1-01
+        controller:
+          image:
+            repository: ACCOUNT_NUMBER.dkr.ecr.ap-northeast-1.amazonaws.com/karpenter/controller
+            tag: 1.8.2
+            digest: ""
+        serviceAccount:
+          annotations:
+            eks.amazonaws.com/role-arn: arn:aws:iam::ACCOUNT_NUMBER:role/EKSWEBClusterKarpenterRole
+  destination:
+    namespace: karpenter
+    server: 'https://kubernetes.default.svc'

@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root-infra-was
+  namespace: argocd
+spec:
+  project: infrastructure
+  sources: 
+    - repoURL: 'https://example.com/test-repo/test.git'
+      path: argocd/infrastructure/karpenter/was-cluster
+      targetRevision: master
+    - repoURL: 'https://example.com/test-repo/test.git'
+      path: argocd/infrastructure/albc/was-cluster
+      targetRevision: master
+    - repoURL: 'https://example.com/test-repo/test.git'
+      path: argocd/infrastructure/opentelemetry-collector/was-cluster
+      targetRevision: master
+    - repoURL: 'https://example.com/test-repo/test.git'
+      path: argocd/infrastructure/prometheus/was-cluster
+      targetRevision: master
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

@@ -1,0 +1,13 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: karpenter-custom
+  namespace: argocd
+spec:
+  source:
+    repoURL: 'https://example.com/test-repo/test.git'
+    targetRevision: master
+    path: infrastructure/karpenter/resources/overlays/web-cluster
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: kube-system

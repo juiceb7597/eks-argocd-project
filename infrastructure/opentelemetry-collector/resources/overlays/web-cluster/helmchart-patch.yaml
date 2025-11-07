@@ -1,0 +1,10 @@
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: otel-metric
+  namespace: opentelemetry-operator-system
+spec:
+  config:
+    exporters:
+      prometheusremotewrite:
+        endpoint: "https://test-stg-prometheus.example.com"

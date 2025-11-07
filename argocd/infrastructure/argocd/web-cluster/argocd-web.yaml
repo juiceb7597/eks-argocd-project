@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-app
+spec:
+  project: infrastructure
+  sources: 
+    - repoURL: 'https://example.com/test-repo/test.git'
+      targetRevision: master
+      path: infrastructure/argocd/helm/overlays/web-cluster
+    - repoURL: 'https://example.com/test-repo/test.git'
+      targetRevision: master
+      path: infrastructure/argocd/application/overlays/web-cluster
+  destination:
+    namespace: argocd
+    server: 'https://kubernetes.default.svc'
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
