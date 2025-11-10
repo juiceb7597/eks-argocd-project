@@ -12,8 +12,8 @@ spec:
           secret:
             argocdServerAdminPassword: $2a$12$dbj # brcypted.
             extra:
-              accounts.sjju.password: $2y$12$oJobxbWgtsv3Oyh38yP13ubTGUKB8SxukPBqPOXU6heRam884ijm.%
-              accounts.sjju2.password: $2y$12$QWPHwvj6Re8bW.2ePHvoruRtA/wjlpd9qTgKYsruLeDFVUxwH4qF2%
+              accounts.sjju.password: $2y$12$oJo
+              accounts.sjju2.password: $2y$12$QWP
           cm:
             accounts.sjju: login, apikey
             accounts.sjju2: login, apikey
