@@ -9,6 +9,15 @@
     - `argocd proj role create-token <PROJECT-NAME> <ROLE-NAME>`
 3. ArgoCD에서 `argocd.token`을 키로 Secret을 생성한다.
 
+```bash
+Create token succeeded for proj:app:image-updater.
+  ID: image-updater
+  Issued At: 2025-10-30T01:35:11Z
+  Expires At: Never
+  Token: eyJhb~~~
+# -> 전체를 Base64 Encoding
+```
+
 # Git 연결 방법
 1. ArgoCD에서 사용하는 Git credential을 재사용한다. (https://argocd-image-updater.readthedocs.io/en/stable/basics/update-methods/#specifying-git-credentials)
 2. 적용할 `Application` 리소스에 `annotations` 를 추가한다. 
